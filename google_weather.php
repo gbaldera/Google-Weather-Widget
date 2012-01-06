@@ -40,13 +40,13 @@ class Widget_Google_weather extends Widgets
         }
 
         //caching
-        if (!$content = $this->pyrocache->get('weather-' . url_title($options['location'])))
+        if (!$content = $this->pyrocache->get('weather/' . md5('weather-' . url_title($options['location']))))
         {
             $city = urlencode($options['location']);
             $content = utf8_encode(file_get_contents('http://www.google.com/ig/api?weather=' . $city . '&hl=' . $options['lang']));
 
             //write cache and expires in 12 hours
-            $this->pyrocache->write($content, 'weather-' . url_title($options['location']), 43200);
+            $this->pyrocache->write($content, 'weather/' . md5('weather-' . url_title($options['location'])), 43200);
         }
 
         $xml = simplexml_load_string($content);
